@@ -17,11 +17,11 @@
 
 <script>
 import {reactive} from "vue";
-import {alert} from "@/service/alertservice";
-import {httpClient} from "@/service/httpclient";
+import {alert} from "@/service/alert-service";
+import {httpClient} from "@/service/http-client";
 import {useStore} from "vuex"
 import {useRouter} from "vue-router"
-import {setAuthStates, revokeAuthState} from "@/service/storeservice"
+import {setAuthStates, revokeAuthState} from "@/service/store-service"
 
 export default {
   name: "Login",

@@ -7,6 +7,10 @@
     "build": "node_modules/.bin/vue-cli-service build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.1.1",
+    "@fortawesome/free-regular-svg-icons": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@vuestic/ag-grid-theme": "^1.0.3",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
     "register-service-worker": "^1.7.2",

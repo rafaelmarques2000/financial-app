@@ -1,12 +1,12 @@
 <template>
-   <div>
-       Home
+   <div class="dashboard-page">
+       dashboard
    </div>
 </template>
 
 <script>
 export default {
-  name: "HomeView"
+  name: "dashboard"
 }
 </script>
 

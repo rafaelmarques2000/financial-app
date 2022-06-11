@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
-import HomeView from '../views/HomeView.vue'
-import {store, revokeAuthState} from "@/service/storeservice"
+import AppTemplate from '../views/AppTemplate.vue'
+import Dashboard from '../views/dashboard/dashboard.vue'
+import Contas from '../views/contas/contas.vue'
+import Servicos from '../views/servicos/servicos.vue'
+import Transacoes from '../views/transacoes/transacoes.vue'
+import {store, revokeAuthState} from "@/service/store-service"
 
 const routes = [
   {
@@ -12,8 +16,26 @@ const routes = [
   {
     path: '/app',
     name: 'home',
-    component: HomeView,
-
+    component: AppTemplate,
+    redirect: {path:"/app/dashboard"},
+    children: [
+        {
+            path: "dashboard",
+            component: Dashboard
+        },
+        {
+           path: "contas",
+           component: Contas
+        },
+        {
+          path: "servicos",
+          component: Servicos
+        },
+        {
+          path: "transacoes",
+          component: Transacoes
+        }
+    ]
   },
 ]
 
