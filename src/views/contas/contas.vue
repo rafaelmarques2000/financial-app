@@ -13,18 +13,22 @@
                           <th>Descrição</th>
                           <th>Valor inicial</th>
                           <th>Tipo</th>
+                          <th>Proprietário</th>
+                          <th>Criado em</th>
                           <th>Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                              <tr v-for="item in data.items">
                                  <td>{{item.description}}</td>
-                                 <td>R$ {{item.initial_value}}</td>
-                                 <td><va-badge :text="item.type" color="warning" class="mr-4" /></td>
+                                 <td>R$ {{(item.initial_amount /100).toFixed(2)}}</td>
+                                 <td><va-badge :text="formatTagText(item.type)" :color="formatTagColor(item.type)" class="mr-4" /></td>
+                                 <td>{{item.owner ? "Sim":"Não"}}</td>
+                                 <td>{{new Date(item.created_at).toLocaleString()}}</td>
                                  <td>
-                                    <va-button @click="openCreateOrUpdateModal(data,item, item.id)" flat :rounded="false" class="mr-4"><i class="fas fa-edit"></i> </va-button>
-                                    <va-button flat :rounded="false" @click="openDeleteModal(data,item, $refs.modaldelete)" class="mr-4" color="#dd2c2c"><i class="fas fa-trash"></i> </va-button>
-                                    <va-button flat :rounded="false" @click="openSharedModal(data,item,$refs.modalshare)" class="mr-4" color="#000"><i class="fas fa-share"></i> </va-button>
+                                    <va-button :disabled="!item.owner" @click="openCreateOrUpdateModal(data,item, item.id)" flat :rounded="false" class="mr-4"><i class="fas fa-edit"></i> </va-button>
+                                    <va-button :disabled="!item.owner" flat :rounded="false" @click="openDeleteModal(data,item, $refs.modaldelete)" class="mr-4" color="#dd2c2c"><i class="fas fa-trash"></i> </va-button>
+                                    <va-button :disabled="!item.owner" flat :rounded="false" @click="openSharedModal(data,item,$refs.modalshare)" class="mr-4" color="#000"><i class="fas fa-share"></i> </va-button>
                                  </td>
                              </tr>
 
@@ -35,7 +39,7 @@
           </va-card-content>
       </va-card>
 
-     <va-modal ref="modalaccount" cancel-text="Cancelar" :hide-default-actions="true" @close="clearModal(data)" ok-text="Finalizar" size="large" :title="data.modalTitle" v-model="data.showModal">
+     <va-modal ref="modalaccount" :hide-default-actions="true" @close="clearModal(data)" ok-text="Finalizar" size="large" :title="data.modalTitle" v-model="data.showModal">
          <va-alert color="danger" v-if="data.alertVisible" class="mb-4">
            {{data.alertMsg}}
          </va-alert>
@@ -58,15 +62,15 @@
          </div>
        <template #footer>
            <va-button color="secondary" @click="$refs.modalaccount.hide()" style="margin-right: 10px"><i class="fas fa-times" style="margin-right: 10px"></i> Cancelar </va-button>
-           <va-button color="primary" @click="createAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Salvar </va-button>
+           <va-button color="primary" @click="createOrUpdateAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Salvar </va-button>
        </template>
      </va-modal>
 
-     <va-modal ref="modaldelete" :hide-default-actions="true" title="Confirmação de exclusão" size="large" v-model="data.showDeleteModal">
+     <va-modal ref="modaldelete" :hide-default-actions="true" title="Confirmação de exclusão" size="large" @close="clearModal(data)" v-model="data.showDeleteModal">
        {{data.confirmDeleteMessage}}
        <template #footer>
          <va-button color="secondary" @click="$refs.modaldelete.hide()" style="margin-right: 10px"><i class="fas fa-times" style="margin-right: 10px"></i> Cancelar </va-button>
-         <va-button color="primary" @click="createAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Confirmar </va-button>
+         <va-button color="primary" @click="deleteAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Confirmar </va-button>
        </template>
      </va-modal>
 
@@ -74,7 +78,7 @@
        <p>Escolha abaixo com quais usuários deseja compartilhar sua conta</p>
        <template #footer>
          <va-button color="secondary" @click="$refs.modalshare.hide()" style="margin-right: 10px"><i class="fas fa-times" style="margin-right: 10px"></i> Cancelar </va-button>
-         <va-button color="primary" @click="createAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Confirmar </va-button>
+         <va-button color="primary" @click="createOrUpdateAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Confirmar </va-button>
        </template>
      </va-modal>
 
@@ -84,7 +88,10 @@
 <script>
 import {reactive} from "vue";
 import {openCreateOrUpdateModal, clearModal, openDeleteModal, openSharedModal} from "@/service/contas/modal-service";
-import {createAccount} from "@/service/contas/conta-service";
+import {createOrUpdateAccount, deleteAccount, getAccounts} from "@/service/contas/conta-service";
+import {onMounted} from "vue";
+import {formatTag, formatTagColor, formatTagText} from "@/service/contas/conta-util";
+
 export default {
   name: "contas",
   setup() {
@@ -95,20 +102,7 @@ export default {
               initial_amount: null,
               type: null
           },
-         items: [
-             {
-                id: 1,
-                description: "Conta teste",
-                initial_value: 5000,
-                type: "DINHEIRO"
-             },
-             {
-               id: 2,
-               description: "Conta teste",
-               initial_value: 5000,
-               type: "CARTAO_CREDITO"
-             }
-         ],
+         items: [],
        showModal: false,
        modalTitle: "Criar nova conta",
 
@@ -128,9 +122,25 @@ export default {
          {
            text: 'Dinheiro',
            value: 'DINHEIRO'
+         },
+         {
+           text: 'Conta corrente',
+           value: 'CORRENTE'
+         },
+         {
+           text: 'Conta poupanca',
+           value: 'POUPANCA'
+         },
+         {
+           text: 'Investimento',
+           value: 'INVESTIMENTO'
          }
        ]
      })
+
+    onMounted(() => {
+        getAccounts(data);
+    })
 
     return {
         data,
@@ -138,7 +148,11 @@ export default {
         clearModal,
         openDeleteModal,
         openSharedModal,
-        createAccount
+        createOrUpdateAccount,
+        deleteAccount,
+        formatTagText,
+        formatTagColor,
+        onMounted
     }
   }
 }

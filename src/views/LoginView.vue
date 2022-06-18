@@ -18,7 +18,7 @@
 <script>
 import {reactive} from "vue";
 import {alert} from "@/service/alert-service";
-import {httpClient} from "@/service/http-client";
+import {httpClientLogin} from "@/service/http-client";
 import {useStore} from "vuex"
 import {useRouter} from "vue-router"
 import {setAuthStates, revokeAuthState} from "@/service/store-service"
@@ -33,7 +33,6 @@ export default {
          alertVisible: false
      })
 
-    const store = useStore()
     const router = useRouter();
 
      const authenticate = () => {
@@ -48,25 +47,25 @@ export default {
            return
          }
 
-         httpClient.post("/auth", {
+         httpClientLogin.post("/auth", {
              username:data.login,
              password: data.senha
          }).then(response => {
            let payload = response.data
-             httpClient.get(`/users/${payload.userId}`,{
+             httpClientLogin.get(`/users/${payload.userId}`,{
                  headers:{"Authorization": `Bearer ${payload.token}`}
              }).then(response => {
-                setAuthStates(store, payload, response)
+                setAuthStates(payload, response)
                 router.push({path:"/app"})
              }).catch(error => {
                 alert(data,error.response.data.message)
-                revokeAuthState(store)
+                revokeAuthState()
              })
 
          }).catch(error => {
              console.log('erro');
              alert(data,error.response.data.message)
-             revokeAuthState(store)
+             revokeAuthState()
          })
      }
     return {

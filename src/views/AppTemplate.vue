@@ -8,7 +8,7 @@
 
             <div class="sidebar-avatar">
                 <va-avatar style="margin-right: 10px" src="https://randomuser.me/api/portraits/women/5.jpg" />
-                <b style="color: #fff">Rafael Marques</b>
+                <b style="color: #fff">{{data.viewUserName}}</b>
             </div>
 
             <div class="sidebar-menu">
@@ -35,7 +35,7 @@
                             <va-avatar style="margin-right: 10px" src="https://randomuser.me/api/portraits/women/5.jpg" />
                           </template>
                           <ul>
-                            <li><a href=""><i class="fas fa-sign-out"></i> Sair</a></li>
+                            <li><a href="" @click.prevent="logout"><i class="fas fa-sign-out"></i> Sair</a></li>
                           </ul>
                         </va-button-dropdown>
                      </div>
@@ -51,15 +51,21 @@
 
 <script>
 import {reactive} from "vue";
+import {useRouter} from "vue-router";
+import {revokeAuthState} from "@/service/store-service";
+import {useStore} from "vuex";
 export default {
   name: "HomeView",
   setup() {
-
+    const store = useStore();
     const data = reactive({
-       closeSidebar: false
+       closeSidebar: false,
+       viewUserName: store.state.userData.view_name
     });
 
-     const closeSidebar = () => {
+    const router = useRouter();
+
+    const closeSidebar = () => {
         if(!data.closeSidebar) {
            data.closeSidebar = true;
            return;
@@ -67,9 +73,15 @@ export default {
         data.closeSidebar = false;
      }
 
+     const logout = () => {
+         revokeAuthState()
+         router.push({path:"/"})
+     }
+
      return {
         data,
-        closeSidebar
+        closeSidebar,
+        logout
      }
   }
 }
@@ -92,8 +104,11 @@ export default {
      }
 
      .sidebar {
-       width: 300px;
+       display: inline-block;
+       vertical-align: top;
        height: 100vh;
+       width: 300px;
+       overflow: auto;
        background: #113054;
        transition: margin-left .5s;
      }

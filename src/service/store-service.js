@@ -26,13 +26,13 @@ export const store = createStore( {
     plugins:[new VuexPersistence({storage: window.localStorage}).plugin]
 });
 
-export const setAuthStates = (store, payload, response) => {
+export const setAuthStates = (payload, response) => {
     store.commit("setAuthToken", payload.token)
     store.commit("setUserData", response.data)
     store.commit("setAuthenticateTrue")
 }
 
-export const revokeAuthState = (store) => {
+export const revokeAuthState = () => {
     store.commit("setAuthToken", null)
     store.commit("setUserData", null)
     store.commit("setAuthenticateFalse")

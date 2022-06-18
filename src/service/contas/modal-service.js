@@ -5,7 +5,7 @@ export const openCreateOrUpdateModal = (data, item, id) => {
         data.modalTitle = `Editar - ${item.description}`
         data.account.id = item.id
         data.account.description = item.description
-        data.account.initial_amount = item.initial_value
+        data.account.initial_amount = item.initial_amount
         data.account.type = getOptionValue(data,item)
     }
 }
@@ -20,6 +20,7 @@ const getOptionValue = (data, item) => {
 
 export const openDeleteModal = (data, item, modal) => {
     modal.show()
+    data.account.id = item.id
     data.confirmDeleteMessage = `Deseja deletar ${item.description} ?`;
 }
 
