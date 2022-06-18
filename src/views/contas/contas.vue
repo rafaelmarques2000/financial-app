@@ -39,7 +39,7 @@
           </va-card-content>
       </va-card>
 
-     <va-modal ref="modalaccount" :hide-default-actions="true" @close="clearModal(data)" ok-text="Finalizar" size="large" :title="data.modalTitle" v-model="data.showModal">
+     <va-modal ref="modalaccount"  :hide-default-actions="true" @close="clearModal(data)" ok-text="Finalizar" size="large" :title="data.modalTitle" v-model="data.showModal">
          <va-alert color="danger" v-if="data.alertVisible" class="mb-4">
            {{data.alertMsg}}
          </va-alert>
@@ -86,16 +86,16 @@
 </template>
 
 <script>
-import {reactive} from "vue";
+import {reactive,onMounted} from "vue";
 import {openCreateOrUpdateModal, clearModal, openDeleteModal, openSharedModal} from "@/service/contas/modal-service";
 import {createOrUpdateAccount, deleteAccount, getAccounts} from "@/service/contas/conta-service";
-import {onMounted} from "vue";
-import {formatTag, formatTagColor, formatTagText} from "@/service/contas/conta-util";
+
+import {formatTagColor, formatTagText} from "@/service/contas/conta-util";
 
 export default {
   name: "contas",
   setup() {
-     const data = reactive({
+    const data = reactive({
           account: {
               id: null,
               description: null,

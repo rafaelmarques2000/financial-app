@@ -46,14 +46,14 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 
-    if(to.name === "login" && store.state.auth) {
-        next({name: "home"})
-    }
-
-    if(to.name !== "login" && !store.state.auth) {
-      revokeAuthState(store)
-      next({name:"login"})
-   }
+   //  if(to.name === "login" && store.state.auth) {
+   //      next({name: "home"})
+   //  }
+   //
+   //  if(to.name !== "login" && !store.state.auth) {
+   //    revokeAuthState(store)
+   //    next({name:"login"})
+   // }
 
     next()
 })

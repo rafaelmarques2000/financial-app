@@ -1,6 +1,6 @@
 
 import {httpClient} from "@/service/http-client";
-import {alert} from "@/service/alert-service";
+import {alert,toastAlert} from "@/service/alert-service";
 import {store} from "@/service/store-service";
 
 export const createOrUpdateAccount = (data) => {
@@ -28,11 +28,11 @@ export const createOrUpdateAccount = (data) => {
             type: data.account.type.value
         }
     }).then(response => {
-        window.alert(response.data.message)
+        toastAlert("success", "Operacão realizada com sucesso")
         data.showModal = false
         getAccounts(data)
     }).catch(error => {
-        window.alert(error.data.message)
+        toastAlert("error", error.data.message)
     })
 }
 
@@ -41,17 +41,17 @@ export const getAccounts = (data) => {
         .then(response => {
              data.items = response.data;
         }).catch(error => {
-            window.alert(error.data.message)
+            toastAlert("error", error.data.message)
         })
 }
 
 export const deleteAccount = (data) => {
     httpClient.delete(`/users/${store.state.userData.id}/accounts/${data.account.id}`)
         .then(response => {
-            window.alert("Conta deletada com sucesso")
+            toastAlert("success", "Conta deletada com sucesso")
             data.showDeleteModal = false
             getAccounts(data)
         }).catch(error => {
-            window.alert(error.data.message)
+            toastAlert("error", error.data)
         })
 }
