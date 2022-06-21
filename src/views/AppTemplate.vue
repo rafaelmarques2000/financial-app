@@ -8,7 +8,7 @@
 
             <div class="sidebar-avatar">
                 <va-avatar style="margin-right: 10px" src="https://randomuser.me/api/portraits/women/5.jpg" />
-                <b style="color: #fff">{{data.viewUserName}}</b>
+                <b style="color: #fff">Teste CI/CD</b>
             </div>
 
             <div class="sidebar-menu">
