@@ -8,7 +8,7 @@
 
             <div class="sidebar-avatar">
                 <va-avatar style="margin-right: 10px" src="https://randomuser.me/api/portraits/women/5.jpg" />
-                <b style="color: #fff">Teste CI/CD</b>
+                <b style="color: #fff">{{data.viewUserName}}</b>
             </div>
 
             <div class="sidebar-menu">
@@ -60,7 +60,7 @@ export default {
     const store = useStore();
     const data = reactive({
        closeSidebar: false,
-       viewUserName: store.state.userData.view_name
+       viewUserName: "TESTE CI/CD"
     });
 
     const router = useRouter();
