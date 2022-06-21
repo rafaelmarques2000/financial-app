@@ -8,9 +8,6 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    env:
-      DOCKERHUB_USER: rafaelmarquespaixao
-      DOCKERHUB_REPO: financial-app
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -22,6 +19,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Extract metadata (tags, labels) for Docker
+        env:
+          DOCKERHUB_USER: rafaelmarquespaixao
+          DOCKERHUB_REPO: financial-app
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
