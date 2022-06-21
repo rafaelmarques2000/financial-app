@@ -39,22 +39,22 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      Deploy:
-        needs: push_to_registry
-        runs-on: ubuntu-latest
+  deploy_ec2:
+    needs: push_to_registry
+    runs-on: ubuntu-latest
 
-        steps:
-          - uses: actions/checkout@v2
-          - name: Deploy in EC2
-            env:
-              PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
-              HOSTNAME: ${{ secrets.AWS_HOSTNAME  }}
-              USER_NAME: ${{ secrets.AWS_USERNAME  }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy in EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+          HOSTNAME: ${{ secrets.AWS_HOSTNAME  }}
+          USER_NAME: ${{ secrets.AWS_USERNAME  }}
 
-            run: |
-              echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-              ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-              
-                #Now we have got the access of EC2 and we will start the deploy .
-                cd /home/ubuntu&&
-                echo "teste de CD" > teste.txt
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          
+            #Now we have got the access of EC2 and we will start the deploy .
+            cd /home/ubuntu&&
+            echo "teste de CD" > teste.txt
