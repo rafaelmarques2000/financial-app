@@ -24,6 +24,11 @@ jobs:
         with:
           images: rafaelmarquespaixao/financial-app
 
+      - name: build frontend
+        uses: actions/setup-node@master
+      - run: npm install
+      - run: npm run build
+
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
