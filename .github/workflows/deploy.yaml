@@ -21,7 +21,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: rafaelmarquespaixao/financial-app
+          images: rafaelmarquespaixao/financial-api
 
       - name: build frontend
         uses: actions/setup-node@master
@@ -51,7 +51,6 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-             docker login --username ${{ secrets.DOCKERHUB_LOGIN }} --password ${{secrets.DOCKERHUB_PASSWORD}},
-             docker pull rafaelmarquespaixao/financial-app,
-             docker run -d --name frontend -p 80:80 rafaelmarquespaixao/frontend-app:latest
+            cd /home/ubuntu &&
+            sh deploy_frontend.sh ${{secrets.DOCKERHUB_LOGIN}} ${{DOCKERHUB_PASSWORD}}
           '
