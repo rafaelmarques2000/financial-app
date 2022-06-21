@@ -18,13 +18,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Extract metadata (tags, labels) for Docker
-        env:
-          DOCKERHUB_USER: rafaelmarquespaixao
-          DOCKERHUB_REPO: financial-app
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: $DOCKERHUB_USER/$DOCKERHUB_REPO
+          images: rafaelmarquespaixao/financial-api
 
       - name: build frontend
         uses: actions/setup-node@master
