@@ -51,5 +51,9 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-             docker login --username ${{ secrets.DOCKERHUB_LOGIN }} --password ${{secrets.DOCKERHUB_PASSWORD}} && docker push rafaelmarquespaixao/financial-app && docker stop frontend && docker rm frontend && docker run -d --name frontend -p 80:80 rafaelmarquespaixao/frontend-app:latest
+             docker login --username ${{ secrets.DOCKERHUB_LOGIN }} --password ${{secrets.DOCKERHUB_PASSWORD}} &&
+             docker pull rafaelmarquespaixao/financial-app &&
+             docker stop frontend &&
+             docker rm frontend &&
+             docker run -d --name frontend -p 80:80 rafaelmarquespaixao/frontend-app:latest
           '
