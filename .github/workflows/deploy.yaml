@@ -48,10 +48,5 @@ jobs:
           HOSTNAME: ${{ secrets.AWS_HOSTNAME  }}
           USER_NAME: ${{ secrets.AWS_USERNAME  }}
 
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-          
-            #Now we have got the access of EC2 and we will start the deploy .
-            cd /home/ubuntu&&
-            echo "teste de CD" > teste.txt
+      - run: echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+      - run: ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
