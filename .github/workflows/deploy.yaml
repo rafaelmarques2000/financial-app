@@ -52,5 +52,5 @@ jobs:
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             cd /home/ubuntu &&
-            sh deploy_frontend.sh ${{secrets.DOCKERHUB_LOGIN}} ${{secrets.DOCKERHUB_PASSWORD}} financial-app frontend
+            sh deploy_frontend.sh ${{secrets.DOCKERHUB_LOGIN}} ${{secrets.DOCKERHUB_PASSWORD}} financial-app frontend 80 80
           '
