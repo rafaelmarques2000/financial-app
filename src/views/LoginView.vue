@@ -1,4 +1,5 @@
 <template>
+
    <div class="login-background">
       <div class="login-form-content">
            <va-card class="flex md12" style="padding:45px">
@@ -13,6 +14,7 @@
            <p class="copyright">Sistemas de finanças todos os direitos reservados &copy; 2022</p>
       </div>
    </div>
+
 </template>
 
 <script>
