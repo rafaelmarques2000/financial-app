@@ -60,7 +60,7 @@ export default {
     const store = useStore();
     const data = reactive({
        closeSidebar: false,
-       viewUserName: "TESTE CI/CD"
+      viewUserName: store.state.userData.view_name
     });
 
     const router = useRouter();

@@ -2,7 +2,7 @@
    <div class="login-background">
       <div class="login-form-content">
            <va-card class="flex md12" style="padding:45px">
-                <h1 class="login-title display-4">Sistema de controle de finanças 1.1.23</h1>
+                <h1 class="login-title display-4">Sistema de controle de finanças</h1>
                  <va-alert color="danger" v-if="data.alertVisible" class="mb-4">
                    {{data.alertMsg}}
                  </va-alert>
