@@ -11,8 +11,6 @@
                 <va-input label="Usuário" bordered v-model="data.login" class="login-inputs"></va-input>
                 <va-input type="password" bordered v-model="data.senha" label="Senha de acesso" class="login-inputs"></va-input>
                 <va-button @click="authenticate" :rounded="false" class="mr-4" style="margin-top: 15px;background: #DF2D62">Entrar</va-button>
-
-                <p class="copyright">Sistemas de finanças todos os direitos reservados &copy; 2022</p>
               </div>
 
            </va-card>
