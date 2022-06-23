@@ -2,7 +2,8 @@
 
    <div class="login-background">
       <div class="login-form-content">
-           <va-card class="flex md12" style="padding:45px">
+           <va-card class="flex md12 login-content" style="padding:45px">
+              <div class="login-form">
                 <h1 class="login-title display-4">Sistema de controle de finanças</h1>
                  <va-alert color="danger" v-if="data.alertVisible" class="mb-4">
                    {{data.alertMsg}}
@@ -10,8 +11,12 @@
                 <va-input label="Usuário" bordered v-model="data.login" class="login-inputs"></va-input>
                 <va-input type="password" bordered v-model="data.senha" label="Senha de acesso" class="login-inputs"></va-input>
                 <va-button @click="authenticate" :rounded="false" class="mr-4" style="margin-top: 15px;background: #DF2D62">Entrar</va-button>
+
+                <p class="copyright">Sistemas de finanças todos os direitos reservados &copy; 2022</p>
+              </div>
+
            </va-card>
-           <p class="copyright">Sistemas de finanças todos os direitos reservados &copy; 2022</p>
+
       </div>
    </div>
 
@@ -87,12 +92,16 @@ export default {
 
   .login-form-content {
     width: 500px;
-    position: absolute;
-    margin: auto;
-    top: 30%;
+    height: 100vh;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+  }
+
+  .login-content {
+    height: 100vh;
+    border-radius: 0;
   }
 
   .login-inputs {
@@ -101,14 +110,20 @@ export default {
   }
 
   .login-title {
-    text-align: center;
-    margin-bottom: 22px;
+    text-align: left;
+    margin-bottom: 52px;
+  }
+
+  .login-form {
+    position: relative;
+    top: 30%;
   }
 
   .copyright {
-     color: #fff;
-     margin-top: 15px;
-    text-align: center;
+    color: #999;
+    position: relative;
+    top: 164px;
+    text-align: left;
   }
 
 </style>
