@@ -21,7 +21,7 @@
                         <tbody>
                              <tr v-for="item in data.items">
                                  <td>{{item.description}}</td>
-                                 <td>R$ {{(item.initial_amount /100).toFixed(2)}}</td>
+                                 <td>{{(item.initial_amount /100).toLocaleString("pt-BR", {style:"currency", currency:"BRL"})}}</td>
                                  <td><va-badge :text="formatTagText(item.type)" :color="formatTagColor(item.type)" class="mr-4" /></td>
                                  <td>{{item.owner ? "Sim":"Não"}}</td>
                                  <td>{{new Date(item.created_at).toLocaleString()}}</td>
@@ -75,7 +75,28 @@
      </va-modal>
 
      <va-modal ref="modalshare" :hide-default-actions="true" title="Compartilhar conta" size="large" v-model="data.showSharedModal">
-       <p>Escolha abaixo com quais usuários deseja compartilhar sua conta</p>
+       <p style="margin-bottom: 15px;">Escolha abaixo com quais usuários deseja compartilhar sua conta</p>
+       <va-select
+           class="mb-12"
+           label="Usuários"
+           :options="data.usersList"
+           v-model="data.selectedUsers"
+           multiple
+           searchable
+       />
+     <div class="table-shared-content" style="height: 250px; overflow: auto">
+       <table class="va-table va-table--striped" style="width: 100%">
+           <tr>
+              <th>Nome</th>
+              <th>Ações</th>
+           </tr>
+           <tr v-for="users in data.selectedUsers">
+               <td>{{users.text}}</td>
+               <td></td>
+           </tr>
+       </table>
+     </div>
+
        <template #footer>
          <va-button color="secondary" @click="$refs.modalshare.hide()" style="margin-right: 10px"><i class="fas fa-times" style="margin-right: 10px"></i> Cancelar </va-button>
          <va-button color="primary" @click="createOrUpdateAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Confirmar </va-button>
@@ -83,18 +104,24 @@
      </va-modal>
 
    </div>
+
+  <loading :show="data.showLoading"></loading>
+
 </template>
 
 <script>
 import {reactive,onMounted} from "vue";
 import {openCreateOrUpdateModal, clearModal, openDeleteModal, openSharedModal} from "@/service/contas/modal-service";
 import {createOrUpdateAccount, deleteAccount, getAccounts} from "@/service/contas/conta-service";
-
-import {formatTagColor, formatTagText} from "@/service/contas/conta-util";
+import {formatTagColor, formatTagText, getAccountTypesOptions} from "@/service/contas/conta-util";
+import {getAllUsers} from "@/service/users/user-service";
+import Loading from "@/components/loading";
 
 export default {
   name: "contas",
+  components: {Loading},
   setup() {
+
     const data = reactive({
           account: {
               id: null,
@@ -105,40 +132,19 @@ export default {
          items: [],
        showModal: false,
        modalTitle: "Criar nova conta",
-
        alertMsg: null,
        alertVisible: false,
-
        showDeleteModal: false,
        confirmDeleteMessage: null,
-
        showSharedModal: false,
-
-       accountTypesOptions: [
-         {
-           text: 'Cartão de credito',
-           value: 'CARTAO_CREDITO'
-         },
-         {
-           text: 'Dinheiro',
-           value: 'DINHEIRO'
-         },
-         {
-           text: 'Conta corrente',
-           value: 'CORRENTE'
-         },
-         {
-           text: 'Conta poupanca',
-           value: 'POUPANCA'
-         },
-         {
-           text: 'Investimento',
-           value: 'INVESTIMENTO'
-         }
-       ]
+       usersList: [],
+       selectedUsers:[],
+       showLoading:false,
+       accountTypesOptions: getAccountTypesOptions()
      })
 
     onMounted(() => {
+        getAllUsers(data);
         getAccounts(data);
     })
 
@@ -152,6 +158,7 @@ export default {
         deleteAccount,
         formatTagText,
         formatTagColor,
+        getAllUsers,
         onMounted
     }
   }

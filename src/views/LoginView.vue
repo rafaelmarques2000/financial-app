@@ -68,7 +68,6 @@ export default {
              })
 
          }).catch(error => {
-             console.log('erro');
              alert(data,error.response.data.message)
              revokeAuthState()
          })

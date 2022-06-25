@@ -1,15 +1,25 @@
 import axios from "axios";
-import {store} from "@/service/store-service"
+import {revokeAuthState, store} from "@/service/store-service"
+import { useRouter } from "vue-router";
 
 let config = {
-        baseURL:"http://ec2-3-238-163-4.compute-1.amazonaws.com:8086/api/v1"
+        baseURL:"http://localhost:8086/api/v1"
 }
+
+let router = useRouter();
 
 if(store.state.token != null) {
     config.headers = {Authorization: `Bearer ${store.state.token}`};
 }
 
-export const httpClient = axios.create(config)
+export const httpClient = axios.create(config);
 export const httpClientLogin = axios.create({
-    baseURL:"http://ec2-3-238-163-4.compute-1.amazonaws.com:8086/api/v1"
+    baseURL:"http://localhost:8086/api/v1"
 })
+
+export const checkStatusRequest = (error) => {
+     if(error.response.status === 401) {
+         revokeAuthState()
+
+     }
+}

@@ -46,3 +46,28 @@ export const formatTagColor = (tag) => {
 
     return "warning"
 }
+
+export const getAccountTypesOptions = () => {
+    return  [
+        {
+            text: 'Cartão de credito',
+            value: 'CARTAO_CREDITO'
+        },
+        {
+            text: 'Dinheiro',
+            value: 'DINHEIRO'
+        },
+        {
+            text: 'Conta corrente',
+            value: 'CORRENTE'
+        },
+        {
+            text: 'Conta poupanca',
+            value: 'POUPANCA'
+        },
+        {
+            text: 'Investimento',
+            value: 'INVESTIMENTO'
+        }
+    ]
+}
