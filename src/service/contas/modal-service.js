@@ -1,3 +1,5 @@
+import {getAllUsers} from "@/service/users/user-service";
+import {getAllSharingUserAccounts} from "@/service/contas/conta-service";
 
 export const openCreateOrUpdateModal = (data, item, id) => {
     data.showModal = true;
@@ -26,6 +28,9 @@ export const openDeleteModal = (data, item, modal) => {
 
 export const openSharedModal = (data, item, modal) => {
     modal.show();
+    data.account.id = item.id
+    getAllUsers(data)
+    getAllSharingUserAccounts(data)
 }
 
 
@@ -35,4 +40,6 @@ export const clearModal = (data) => {
     data.account.description = null
     data.account.initial_amount = null
     data.account.type = null
+    data.selectedUser = null
+    data.sharingAccountUsers = []
 }

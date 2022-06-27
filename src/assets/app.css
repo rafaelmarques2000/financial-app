@@ -24,3 +24,11 @@ html {
     margin-top: 15px;
     padding: 15px;
 }
+
+.margin-15px {
+    margin-right: 15px;
+}
+
+.filter-title {
+    margin-bottom: 15px;
+}

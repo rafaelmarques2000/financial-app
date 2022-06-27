@@ -55,14 +55,14 @@ export default {
          httpClientLogin.post("/auth", {
              username:data.login,
              password: data.senha
-         }).then(response => {
-           let payload = response.data
-             httpClientLogin.get(`/users/${payload.userId}`,{
-                 headers:{"Authorization": `Bearer ${payload.token}`}
-             }).then(response => {
-                setAuthStates(payload, response)
+         }).then(authResponse => {
+             httpClientLogin.get(`/users/${authResponse.data.userId}`,{
+                 headers:{"Authorization": `Bearer ${authResponse.data.token}`}
+             }).then(getUserResponse => {
+                setAuthStates(authResponse, getUserResponse)
                 router.push({path:"/app"})
              }).catch(error => {
+                console.log(error)
                 alert(data,error.response.data.message)
                 revokeAuthState()
              })

@@ -27,7 +27,7 @@ export const store = createStore( {
 });
 
 export const setAuthStates = (payload, response) => {
-    store.commit("setAuthToken", payload.token)
+    store.commit("setAuthToken", payload.data.token)
     store.commit("setUserData", response.data)
     store.commit("setAuthenticateTrue")
 }

@@ -1,6 +1,12 @@
 <template>
    <div class="contas-page">
       <h1 class="display-3">Contas</h1>
+
+     <va-card class="page-content flex">
+         <h1 class="filter-title">Filtros</h1>
+         <va-input label="Descrição" class=""></va-input>
+     </va-card>
+
       <va-card class="page-content">
           <va-card-content>
                 <va-button @click="openCreateOrUpdateModal(data)" gradient class="mr-4"><i class="fas fa-plus"></i>  Adicionar contas</va-button>
@@ -21,8 +27,8 @@
                         <tbody>
                              <tr v-for="item in data.items">
                                  <td>{{item.description}}</td>
-                                 <td>{{(item.initial_amount /100).toLocaleString("pt-BR", {style:"currency", currency:"BRL"})}}</td>
-                                 <td><va-badge :text="formatTagText(item.type)" :color="formatTagColor(item.type)" class="mr-4" /></td>
+                                 <td>{{formatMoney((item.initial_amount /100), "BRL")}}</td>
+                                 <td><va-badge :text="formatTagText(item.type)" :color="formatTagColor(item.type)" text-color="#fff" class="mr-4" /></td>
                                  <td>{{item.owner ? "Sim":"Não"}}</td>
                                  <td>{{new Date(item.created_at).toLocaleString()}}</td>
                                  <td>
@@ -74,32 +80,33 @@
        </template>
      </va-modal>
 
-     <va-modal ref="modalshare" :hide-default-actions="true" title="Compartilhar conta" size="large" v-model="data.showSharedModal">
+     <va-modal ref="modalshare" @close="clearModal(data)" :hide-default-actions="true" title="Compartilhar conta" size="large" v-model="data.showSharedModal">
        <p style="margin-bottom: 15px;">Escolha abaixo com quais usuários deseja compartilhar sua conta</p>
-       <va-select
-           class="mb-12"
-           label="Usuários"
-           :options="data.usersList"
-           v-model="data.selectedUsers"
-           multiple
-           searchable
-       />
+       <div class="share-search" style="display: flex">
+         <va-select
+             class="mb-12 margin-15px"
+             label="Usuários"
+             :options="data.usersList"
+             v-model="data.selectedUser"
+             searchable
+         />
+         <va-button class="mb-3" @click="addingSharingUser(data)"><i class="fas fa-plus margin-15px"></i> Adicionar</va-button>
+       </div>
      <div class="table-shared-content" style="height: 250px; overflow: auto">
        <table class="va-table va-table--striped" style="width: 100%">
            <tr>
               <th>Nome</th>
               <th>Ações</th>
            </tr>
-           <tr v-for="users in data.selectedUsers">
-               <td>{{users.text}}</td>
-               <td></td>
+           <tr v-for="user in data.sharingAccountUsers">
+               <td>{{user.view_name}}</td>
+               <td><va-button flat color="#dd2c2c" @click="deleteUserAccountSharing(data, user.user_id)"><i class="fas fa-trash"></i> </va-button></td>
            </tr>
        </table>
      </div>
 
        <template #footer>
          <va-button color="secondary" @click="$refs.modalshare.hide()" style="margin-right: 10px"><i class="fas fa-times" style="margin-right: 10px"></i> Cancelar </va-button>
-         <va-button color="primary" @click="createOrUpdateAccount(data)"><i class="fas fa-save" style="margin-right: 10px"></i> Confirmar </va-button>
        </template>
      </va-modal>
 
@@ -112,10 +119,17 @@
 <script>
 import {reactive,onMounted} from "vue";
 import {openCreateOrUpdateModal, clearModal, openDeleteModal, openSharedModal} from "@/service/contas/modal-service";
-import {createOrUpdateAccount, deleteAccount, getAccounts} from "@/service/contas/conta-service";
+import {
+  addingSharingUser,
+  createOrUpdateAccount,
+  deleteAccount,
+  deleteUserAccountSharing,
+  getAccounts
+} from "@/service/contas/conta-service";
 import {formatTagColor, formatTagText, getAccountTypesOptions} from "@/service/contas/conta-util";
 import {getAllUsers} from "@/service/users/user-service";
 import Loading from "@/components/loading";
+import {formatMoney} from "@/service/utils";
 
 export default {
   name: "contas",
@@ -138,8 +152,9 @@ export default {
        confirmDeleteMessage: null,
        showSharedModal: false,
        usersList: [],
-       selectedUsers:[],
+       selectedUser:null,
        showLoading:false,
+       sharingAccountUsers: [],
        accountTypesOptions: getAccountTypesOptions()
      })
 
@@ -159,7 +174,9 @@ export default {
         formatTagText,
         formatTagColor,
         getAllUsers,
-        onMounted
+        addingSharingUser,
+        deleteUserAccountSharing,
+        formatMoney
     }
   }
 }
