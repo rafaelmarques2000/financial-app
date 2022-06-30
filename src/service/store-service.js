@@ -23,7 +23,7 @@ export const store = createStore( {
              state.userData = userData
         }
     },
-    plugins:[new VuexPersistence({storage: window.localStorage}).plugin]
+    plugins:[new VuexPersistence({storage: window.sessionStorage}).plugin]
 });
 
 export const setAuthStates = (payload, response) => {

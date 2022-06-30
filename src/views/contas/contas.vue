@@ -4,9 +4,10 @@
 
      <va-card class="page-content flex">
          <h1 class="filter-title">Filtros</h1>
-         <va-input label="Descrição" class=""></va-input>
+         <va-input class=" flex md6" label="Descrição" placeholder="Digite o nome da conta" v-model="data.filter.description"></va-input>
+         <va-button style="margin-top: 10px; margin-right: 10px"  @click="searchByFilter"><i class="fas fa-search margin-15px"></i> Pesquisar </va-button>
+       <va-button style="margin-top: 10px" class="flex md6" @click="clearFilter" color="danger" :disabled="data.filter.description == null || data.filter.description === ''"><i class="fas fa-times margin-15px"></i> Limpar </va-button>
      </va-card>
-
       <va-card class="page-content">
           <va-card-content>
                 <va-button @click="openCreateOrUpdateModal(data)" gradient class="mr-4"><i class="fas fa-plus"></i>  Adicionar contas</va-button>
@@ -56,7 +57,7 @@
              </div>
            </div>
            <div class="flex md6">
-             <div class="item"><va-input v-model="data.account.initial_amount" type="text" label="Valor inicial"></va-input></div>
+             <div class="item"><va-input inputmode="number" v-model="data.account.initial_amount" type="text" label="Valor inicial"></va-input></div>
            </div>
 
            <div class="flex md12" style="margin-top: 10px">
@@ -117,8 +118,8 @@
 </template>
 
 <script>
-import {reactive,onMounted} from "vue";
-import {openCreateOrUpdateModal, clearModal, openDeleteModal, openSharedModal} from "@/service/contas/modal-service";
+import {onMounted, reactive} from "vue";
+import {clearModal, openCreateOrUpdateModal, openDeleteModal, openSharedModal} from "@/service/contas/modal-service";
 import {
   addingSharingUser,
   createOrUpdateAccount,
@@ -155,13 +156,27 @@ export default {
        selectedUser:null,
        showLoading:false,
        sharingAccountUsers: [],
-       accountTypesOptions: getAccountTypesOptions()
+       accountTypesOptions: getAccountTypesOptions(),
+       filter: {
+            description: null
+       }
      })
 
     onMounted(() => {
-        getAllUsers(data);
         getAccounts(data);
     })
+
+    const searchByFilter = () => {
+      if(data.filter.description === "" || data.filter.description == null) {
+        return
+      }
+      getAccounts(data)
+    }
+
+    const clearFilter = () => {
+        data.filter.description = null
+        getAccounts(data)
+    }
 
     return {
         data,
@@ -176,7 +191,10 @@ export default {
         getAllUsers,
         addingSharingUser,
         deleteUserAccountSharing,
-        formatMoney
+        formatMoney,
+        getAccounts,
+        searchByFilter,
+        clearFilter
     }
   }
 }

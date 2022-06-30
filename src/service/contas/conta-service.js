@@ -41,8 +41,12 @@ export const createOrUpdateAccount = (data) => {
 }
 
 export const getAccounts = (data) => {
+
+    let url = data.filter.description == null ? `/users/${store.state.userData.id}/accounts`
+        : `/users/${store.state.userData.id}/accounts?description=${data.filter.description}`
+
     data.showLoading = true
-    httpClient.get(`/users/${store.state.userData.id}/accounts`)
+    httpClient.get(url)
         .then(response => {
              data.showLoading = false
              data.items = response.data

@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './registerServiceWorker'
 import router from './router'
 import 'vuestic-ui/dist/vuestic-ui.css'
 import {VuesticPlugin} from "vuestic-ui"
