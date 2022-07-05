@@ -7,7 +7,7 @@ export const openCreateOrUpdateModal = (data, item, id) => {
         data.modalTitle = `Editar - ${item.description}`
         data.account.id = item.id
         data.account.description = item.description
-        data.account.initial_amount = item.initial_amount
+        data.account.initial_amount = item.initialAmount
         data.account.type = getOptionValue(data,item)
     }
 }

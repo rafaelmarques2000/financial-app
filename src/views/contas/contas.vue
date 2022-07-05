@@ -10,7 +10,7 @@
      </va-card>
       <va-card class="page-content">
           <va-card-content>
-                <va-button @click="openCreateOrUpdateModal(data)" gradient class="mr-4"><i class="fas fa-plus"></i>  Adicionar contas</va-button>
+                <va-button @click="openCreateOrUpdateModal(data)" gradient class="mr-4"><i class="fas fa-plus"></i>  Adicionar conta</va-button>
 
             <div class="va-table-responsive" style="margin-top: 15px; width: 100%">
                 <div class="table-container">
@@ -28,10 +28,10 @@
                         <tbody>
                              <tr v-for="item in data.items">
                                  <td>{{item.description}}</td>
-                                 <td>{{formatMoney((item.initial_amount /100), "BRL")}}</td>
+                                 <td>{{formatMoney((item.initialAmount /100), "BRL")}}</td>
                                  <td><va-badge :text="formatTagText(item.type)" :color="formatTagColor(item.type)" text-color="#fff" class="mr-4" /></td>
                                  <td>{{item.owner ? "Sim":"Não"}}</td>
-                                 <td>{{new Date(item.created_at).toLocaleString()}}</td>
+                                 <td>{{new Date(item.createdAt).toLocaleString()}}</td>
                                  <td>
                                     <va-button :disabled="!item.owner" @click="openCreateOrUpdateModal(data,item, item.id)" flat :rounded="false" class="mr-4"><i class="fas fa-edit"></i> </va-button>
                                     <va-button :disabled="!item.owner" flat :rounded="false" @click="openDeleteModal(data,item, $refs.modaldelete)" class="mr-4" color="#dd2c2c"><i class="fas fa-trash"></i> </va-button>
@@ -42,6 +42,14 @@
                         </tbody>
                       </table>
                     </div>
+                   <div class="pagination-content" v-if="data.items.length > 0">
+                      <va-pagination
+                          @click="updateList"
+                          v-model="data.selectedPage"
+                          :pages="data.pages"
+                          :visible-pages="4"
+                      />
+                   </div>
                   </div>
           </va-card-content>
       </va-card>
@@ -159,7 +167,9 @@ export default {
        accountTypesOptions: getAccountTypesOptions(),
        filter: {
             description: null
-       }
+       },
+       selectedPage: 1,
+       pages: 0
      })
 
     onMounted(() => {
@@ -173,8 +183,13 @@ export default {
       getAccounts(data)
     }
 
+    const updateList = () => {
+        getAccounts(data, data.selectedPage)
+    }
+
     const clearFilter = () => {
         data.filter.description = null
+        data.selectedPage = 1
         getAccounts(data)
     }
 
@@ -194,7 +209,8 @@ export default {
         formatMoney,
         getAccounts,
         searchByFilter,
-        clearFilter
+        clearFilter,
+        updateList
     }
   }
 }

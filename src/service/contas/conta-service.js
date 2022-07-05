@@ -33,7 +33,7 @@ export const createOrUpdateAccount = (data) => {
         toastAlert("success", "Operacão realizada com sucesso")
         data.showModal = false
         data.showLoading = false
-        getAccounts(data)
+        getAccounts(data, data.selectedPage)
     }).catch(error => {
         data.showLoading = false
         toastAlert("error", error.data.message)
@@ -42,14 +42,16 @@ export const createOrUpdateAccount = (data) => {
 
 export const getAccounts = (data) => {
 
-    let url = data.filter.description == null ? `/users/${store.state.userData.id}/accounts`
-        : `/users/${store.state.userData.id}/accounts?description=${data.filter.description}`
+    let url = data.filter.description == null ? `/users/${store.state.userData.id}/accounts?size=4&page=${data.selectedPage}`
+        : `/users/${store.state.userData.id}/accounts?description=${data.filter.description}&size=4&page=${data.selectedPage}`
 
     data.showLoading = true
     httpClient.get(url)
         .then(response => {
+             data.selectedPage = response.data.page
+             data.pages = response.data.total_pages
              data.showLoading = false
-             data.items = response.data
+             data.items = response.data.items
         }).catch(error => {
             data.showLoading = false
             toastAlert("error", error.data.message)
